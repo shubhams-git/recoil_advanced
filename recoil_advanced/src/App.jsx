@@ -1,16 +1,32 @@
-import { useRecoilState, useRecoilValue } from "recoil"
+import { atomFamily, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { allNotifsAtom, totalNotificationsSelector } from "./assets/store/atoms/atoms"
+import { todoFamily } from "./assets/store/atom-family/todoFamily"
 export default function App(){
+  
+  const setTodo = useSetRecoilState(todoFamily(2))
 
-  const allNotifications= useRecoilValue(allNotifsAtom)
-  const totalNotifs = useRecoilValue(totalNotificationsSelector)
+  setTimeout(()=>{
+    console.log("Timeout triggered")
+    setTodo((todo)=>{
+      todo.title = "Hi",
+      todo.description = "Hey"
+    })
+  },1000)
 
   return <>
-    <button>Home</button>
-    <button>My Network ({allNotifications.network>=100?"99+":allNotifications.network})</button>
-    <button>Jobs {allNotifications.jobs>0?`(${allNotifications.jobs})`:""}</button>
-    <button>Messages {allNotifications.messages>0?`(${allNotifications.messages})`:""}</button>
-    <button>Notifications {allNotifications.notifications>0?`(${allNotifications.notifications})`:""}</button>
-    <button>Me {totalNotifs>0?`(${totalNotifs})`:""}</button>
+    <Todo id={1} />
+    <Todo id={3} />
+    <Todo id={3} />
+    <Todo id={3} />
+  </>
+}
+
+
+function Todo({id}){
+  const todo = useRecoilValue(todoFamily(id))
+  return <>
+    <b>{todo.title}</b>
+    <p>{todo.description}</p>
+    <hr/>
   </>
 }
