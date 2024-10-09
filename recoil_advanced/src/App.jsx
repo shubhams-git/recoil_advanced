@@ -1,20 +1,9 @@
 import { useRecoilState, useRecoilValue } from "recoil"
 import { allNotifsAtom, totalNotificationsSelector } from "./assets/store/atoms/atoms"
-import axios from "axios"
-import { useEffect } from "react"
 export default function App(){
 
-  const [allNotifications, setAllNotifications] = useRecoilState(allNotifsAtom)
+  const allNotifications= useRecoilValue(allNotifsAtom)
   const totalNotifs = useRecoilValue(totalNotificationsSelector)
-
-  useEffect(()=>{
-    const fetchData = async()=>{
-      const response = await axios.get("http://localhost:3000/notifications")
-      console.log(response.data)
-      return setAllNotifications(response.data)
-    }
-    fetchData()
-  },[])
 
   return <>
     <button>Home</button>

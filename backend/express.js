@@ -8,12 +8,14 @@ app.use(express.json())
 
 app.get('/notifications',(req,res)=>{
     console.log(`Received Req`)
-    return res.json({
-        network: 40,
-        jobs: 60,
-        messages: 30,
-        notifications: 95
-    })
+    return setTimeout(()=>{
+        return res.json({
+            network: 40,
+            jobs: 60,
+            messages: 30,
+            notifications: 95
+        })
+    },500)
 })
 
 app.listen(PORT, ()=>{
