@@ -1,20 +1,27 @@
-import { useRecoilValue } from "recoil"
-import { jobsCountAtom } from "./assets/store/atoms/jobsCountAtom"
-import { messagesCountAtom } from "./assets/store/atoms/messagesCountAtom"
-import { notificationsCountAtom } from "./assets/store/atoms/notificatiosnCountAtom"
-import { networkCountAtom } from "./assets/store/atoms/networkCountAtom"
+import { useRecoilState, useRecoilValue } from "recoil"
+import { allNotifsAtom, totalNotificationsSelector } from "./assets/store/atoms/atoms"
+import axios from "axios"
+import { useEffect } from "react"
 export default function App(){
 
-  const jobsCount = useRecoilValue(jobsCountAtom)
-  const networkCount = useRecoilValue(networkCountAtom)
-  const messagesCount = useRecoilValue(messagesCountAtom)
-  const notificationsCount = useRecoilValue(notificationsCountAtom)
+  const [allNotifications, setAllNotifications] = useRecoilState(allNotifsAtom)
+  const totalNotifs = useRecoilValue(totalNotificationsSelector)
+
+  useEffect(()=>{
+    const fetchData = async()=>{
+      const response = await axios.get("http://localhost:3000/notifications")
+      console.log(response.data)
+      return setAllNotifications(response.data)
+    }
+    fetchData()
+  },[])
 
   return <>
     <button>Home</button>
-    <button>My Network ({networkCount>=100?"99+":networkCount})</button>
-    <button>Jobs {jobsCount>0?`(${jobsCount})`:""}</button>
-    <button>Messages {messagesCount>0?`(${messagesCount})`:""}</button>
-    <button>Notifications {notificationsCount>0?`(${notificationsCount})`:""}</button>
+    <button>My Network ({allNotifications.network>=100?"99+":allNotifications.network})</button>
+    <button>Jobs {allNotifications.jobs>0?`(${allNotifications.jobs})`:""}</button>
+    <button>Messages {allNotifications.messages>0?`(${allNotifications.messages})`:""}</button>
+    <button>Notifications {allNotifications.notifications>0?`(${allNotifications.notifications})`:""}</button>
+    <button>Me {totalNotifs>0?`(${totalNotifs})`:""}</button>
   </>
 }
